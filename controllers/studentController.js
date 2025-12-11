@@ -54,4 +54,23 @@ const createStudent = async (req, res) => {
     }
 };
 
-module.exports = { getStudents, createStudent };
+// @desc    Get student by ID
+// @route   GET /api/students/:id
+// @access  Admin/Teacher/Student (Self)
+const getStudentById = async (req, res) => {
+    try {
+        const student = await User.findById(req.params.id)
+            .populate('studentClass', 'name section')
+            .select('-password');
+
+        if (student) {
+            res.json(student);
+        } else {
+            res.status(404).json({ message: 'Student not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+module.exports = { getStudents, createStudent, getStudentById };
