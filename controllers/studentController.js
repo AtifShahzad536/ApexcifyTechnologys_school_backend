@@ -1,0 +1,57 @@
+const User = require('../models/User');
+const Class = require('../models/Class');
+
+// @desc    Get all students
+// @route   GET /api/students
+// @access  Admin
+const getStudents = async (req, res) => {
+    try {
+        const students = await User.find({ role: 'Student' }).populate('studentClass', 'name section');
+        res.json(students);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// @desc    Create a student
+// @route   POST /api/students
+// @access  Admin
+const createStudent = async (req, res) => {
+    try {
+        const { name, email, password, studentClass, rollNumber, phone, address, parentName, parentEmail, parentPhone } = req.body;
+
+        const userExists = await User.findOne({ email });
+        if (userExists) {
+            return res.status(400).json({ message: 'User already exists' });
+        }
+
+        const student = await User.create({
+            name,
+            email,
+            password,
+            role: 'Student',
+            studentClass,
+            rollNumber,
+            phone,
+            address
+        });
+
+        // Optionally create parent user or link existing one here
+        // For simplicity, we are just storing basics now.
+
+        // Add student to Class
+        if (studentClass) {
+            const cls = await Class.findById(studentClass);
+            if (cls) {
+                cls.students.push(student._id);
+                await cls.save();
+            }
+        }
+
+        res.status(201).json(student);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+module.exports = { getStudents, createStudent };
