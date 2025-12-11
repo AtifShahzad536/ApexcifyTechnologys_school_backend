@@ -1,12 +1,30 @@
 const Grade = require('../models/Grade');
 
+// Helper to calculate grade
+const calculateGrade = (marks, totalMarks) => {
+    const percentage = (marks / totalMarks) * 100;
+    if (percentage >= 90) return 'A+';
+    if (percentage >= 85) return 'A';
+    if (percentage >= 80) return 'A-';
+    if (percentage >= 75) return 'B+';
+    if (percentage >= 70) return 'B';
+    if (percentage >= 65) return 'B-';
+    if (percentage >= 60) return 'C+';
+    if (percentage >= 55) return 'C';
+    if (percentage >= 50) return 'C-';
+    if (percentage >= 40) return 'D';
+    return 'F';
+};
+
 // @desc    Add a new grade
 // @route   POST /api/grades
 // @access  Teacher
 const addGrade = async (req, res) => {
     try {
         const { student, subject, examType, marks, totalMarks, remarks } = req.body;
-        const teacher = req.user._id; // Assuming auth middleware sets req.user
+        const teacher = req.user._id;
+
+        const gradeValue = calculateGrade(marks, totalMarks || 100);
 
         const grade = await Grade.create({
             student,
@@ -14,6 +32,7 @@ const addGrade = async (req, res) => {
             examType,
             marks,
             totalMarks: totalMarks || 100,
+            grade: gradeValue,
             remarks,
             teacher
         });
@@ -28,6 +47,8 @@ const addGrade = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+// ... (getGrades functions remain same, omitted for brevity in this chunk if possible? No, I must replace contiguous block) ...
 
 // @desc    Get grades by student
 // @route   GET /api/grades/student/:studentId
@@ -91,6 +112,9 @@ const updateGrade = async (req, res) => {
         grade.totalMarks = totalMarks || grade.totalMarks;
         grade.remarks = remarks || grade.remarks;
         grade.examType = examType || grade.examType;
+
+        // Recalculate grade explicitly
+        grade.grade = calculateGrade(grade.marks, grade.totalMarks);
 
         const updatedGrade = await grade.save();
         const populatedGrade = await Grade.findById(updatedGrade._id)
