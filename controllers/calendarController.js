@@ -39,7 +39,16 @@ const getTimetable = async (req, res) => {
             .populate('days.periods.teacher', 'name');
 
         if (!timetable) {
-            return res.status(404).json({ message: 'Timetable not found' });
+            return res.json({
+                class: req.params.classId,
+                days: [
+                    { name: 'Monday', periods: [] },
+                    { name: 'Tuesday', periods: [] },
+                    { name: 'Wednesday', periods: [] },
+                    { name: 'Thursday', periods: [] },
+                    { name: 'Friday', periods: [] }
+                ]
+            });
         }
 
         res.json(timetable);

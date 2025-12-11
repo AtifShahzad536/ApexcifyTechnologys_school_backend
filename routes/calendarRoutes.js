@@ -17,11 +17,9 @@ router.route('/timetable/:classId')
     .get(protect, getTimetable);
 
 // Event Routes
-router.route('/events')
-    .get(protect, getEvents)
-    .post(protect, createEvent);
-
-router.route('/events/:id')
-    .delete(protect, deleteEvent);
+router.get('/events', protect, getEvents);
+router.post('/events', protect, createEvent); // Assuming 'admin' and 'addEvent' are not part of the original instruction's intent for this line
+router.delete('/events/:id', protect, deleteEvent); // Assuming 'admin' is not part of the original instruction's intent for this line
+router.get('/timetable/:classId', protect, getTimetable);
 
 module.exports = router;
