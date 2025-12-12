@@ -1,10 +1,11 @@
 const Exam = require('../models/Exam');
 const ExamSubmission = require('../models/ExamSubmission');
 const Subject = require('../models/Subject');
+const User = require('../models/User');
 
 // @desc    Create Exam
 // @route   POST /api/exams
-// @access  Teacher
+// @access  Teacher/Admin
 const createExam = async (req, res) => {
     try {
         const { title, subject, class: classId, startTime, duration, questions } = req.body;
@@ -29,22 +30,22 @@ const createExam = async (req, res) => {
     }
 };
 
-// @desc    Get Exams (For Student: available exams; For Teacher: created exams)
+// @desc    Get Exams (For Student: available exams; For Teacher/Admin: created exams)
 // @route   GET /api/exams
 // @access  Private
 const getExams = async (req, res) => {
     try {
         let query = {};
         if (req.user.role === 'Student') {
-            // Find student's class
-            const user = await req.user.populate('studentClass');
-            if (user.studentClass) {
-                query.class = user.studentClass._id;
+            // Query the User model to get student's class
+            const student = await User.findById(req.user._id).populate('studentClass');
+            if (student && student.studentClass) {
+                query.class = student.studentClass._id;
                 query.isActive = true;
             } else {
                 return res.json([]);
             }
-        } else if (req.user.role === 'Teacher') {
+        } else if (req.user.role === 'Teacher' || req.user.role === 'Admin') {
             query.createdBy = req.user._id;
         }
 
