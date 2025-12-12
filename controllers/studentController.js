@@ -73,4 +73,35 @@ const getStudentById = async (req, res) => {
     }
 };
 
-module.exports = { getStudents, createStudent, getStudentById };
+// @desc    Delete a student
+// @route   DELETE /api/students/:id
+// @access  Admin
+const deleteStudent = async (req, res) => {
+    try {
+        const student = await User.findById(req.params.id);
+
+        if (!student) {
+            return res.status(404).json({ message: 'Student not found' });
+        }
+
+        if (student.role !== 'Student') {
+            return res.status(400).json({ message: 'User is not a student' });
+        }
+
+        // Remove student from class if assigned
+        if (student.studentClass) {
+            const cls = await Class.findById(student.studentClass);
+            if (cls) {
+                cls.students = cls.students.filter(s => s.toString() !== student._id.toString());
+                await cls.save();
+            }
+        }
+
+        await User.findByIdAndDelete(req.params.id);
+        res.json({ message: 'Student deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+module.exports = { getStudents, createStudent, getStudentById, deleteStudent };

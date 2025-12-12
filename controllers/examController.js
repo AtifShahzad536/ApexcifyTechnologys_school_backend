@@ -38,11 +38,17 @@ const getExams = async (req, res) => {
         let query = {};
         if (req.user.role === 'Student') {
             // Query the User model to get student's class
+            console.log('Student ID:', req.user._id);
             const student = await User.findById(req.user._id).populate('studentClass');
+            console.log('Student found:', student ? 'Yes' : 'No');
+            console.log('Student class:', student?.studentClass);
+
             if (student && student.studentClass) {
                 query.class = student.studentClass._id;
                 query.isActive = true;
+                console.log('Query for exams:', query);
             } else {
+                console.log('No student class found, returning empty array');
                 return res.json([]);
             }
         } else if (req.user.role === 'Teacher' || req.user.role === 'Admin') {
@@ -53,6 +59,8 @@ const getExams = async (req, res) => {
             .populate('subject', 'name')
             .populate('class', 'name section')
             .sort({ startTime: -1 });
+
+        console.log('Exams found:', exams.length);
 
         // For students, check if already submitted
         if (req.user.role === 'Student') {
@@ -65,6 +73,7 @@ const getExams = async (req, res) => {
 
         res.json(exams);
     } catch (error) {
+        console.error('Error in getExams:', error);
         res.status(500).json({ message: error.message });
     }
 };

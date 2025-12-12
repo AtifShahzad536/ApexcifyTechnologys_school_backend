@@ -3,6 +3,7 @@ const router = express.Router();
 const { protect, admin } = require('../middleware/authMiddleware');
 const {
     getPendingUsers,
+    getPendingCount,
     approveUser,
     rejectUser,
     updateUserDetails,
@@ -11,6 +12,9 @@ const {
 
 // Get all pending registration requests
 router.get('/pending', protect, admin, getPendingUsers);
+
+// Get pending count (lightweight endpoint for polling)
+router.get('/count', protect, admin, getPendingCount);
 
 // Get all approved users
 router.get('/users', protect, admin, getAllUsers);

@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const { sendApprovalEmail } = require('../utils/emailService');
 
 // @desc    Get all pending users
 // @route   GET /api/approvals/pending
@@ -10,6 +11,18 @@ const getPendingUsers = async (req, res) => {
             .sort({ requestedAt: -1 });
 
         res.json(pendingUsers);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// @desc    Get pending approvals count
+// @route   GET /api/approvals/count
+// @access  Admin
+const getPendingCount = async (req, res) => {
+    try {
+        const count = await User.countDocuments({ status: 'Pending' });
+        res.json({ count });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -64,6 +77,15 @@ const approveUser = async (req, res) => {
         console.log('Saving user with role:', role);
         await user.save();
         console.log('User saved successfully');
+
+        // Send approval email to user
+        try {
+            await sendApprovalEmail(user.email, user.name, role);
+            console.log(`✅ Approval email sent to ${user.email}`);
+        } catch (emailError) {
+            console.error('❌ Failed to send approval email:', emailError.message);
+            // Don't fail the approval if email fails
+        }
 
         const populatedUser = await User.findById(user._id)
             .select('-password')
@@ -175,6 +197,7 @@ const getAllUsers = async (req, res) => {
 
 module.exports = {
     getPendingUsers,
+    getPendingCount,
     approveUser,
     rejectUser,
     updateUserDetails,
