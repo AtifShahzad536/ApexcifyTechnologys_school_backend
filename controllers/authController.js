@@ -1,5 +1,6 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
+const { sendNewApprovalNotification } = require('../utils/emailService');
 
 const generateToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -79,6 +80,16 @@ const registerUser = async (req, res) => {
     });
 
     if (user) {
+        // Send email notification to admin (non-blocking)
+        sendNewApprovalNotification({
+            name: user.name,
+            email: user.email,
+            requestedAt: user.requestedAt
+        }).catch(err => {
+            // Log error but don't block registration
+            console.error('Failed to send email notification:', err);
+        });
+
         res.status(201).json({
             message: 'Registration submitted successfully! Your account is pending admin approval. You will be able to login once approved.',
             email: user.email,
