@@ -36,4 +36,22 @@ const getClasses = async (req, res) => {
     }
 };
 
-module.exports = { createClass, getClasses };
+// @desc    Delete a class
+// @route   DELETE /api/classes/:id
+// @access  Admin
+const deleteClass = async (req, res) => {
+    try {
+        const classToDelete = await Class.findById(req.params.id);
+
+        if (!classToDelete) {
+            return res.status(404).json({ message: 'Class not found' });
+        }
+
+        await Class.findByIdAndDelete(req.params.id);
+        res.json({ message: 'Class deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+module.exports = { createClass, getClasses, deleteClass };
