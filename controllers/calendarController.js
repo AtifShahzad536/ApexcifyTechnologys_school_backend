@@ -42,11 +42,11 @@ const getTimetable = async (req, res) => {
             return res.json({
                 class: req.params.classId,
                 days: [
-                    { name: 'Monday', periods: [] },
-                    { name: 'Tuesday', periods: [] },
-                    { name: 'Wednesday', periods: [] },
-                    { name: 'Thursday', periods: [] },
-                    { name: 'Friday', periods: [] }
+                    { day: 'Monday', periods: [] },
+                    { day: 'Tuesday', periods: [] },
+                    { day: 'Wednesday', periods: [] },
+                    { day: 'Thursday', periods: [] },
+                    { day: 'Friday', periods: [] }
                 ]
             });
         }
