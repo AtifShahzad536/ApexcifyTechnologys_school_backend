@@ -5,6 +5,18 @@ const Assignment = require('../models/Assignment');
 const Submission = require('../models/Submission');
 const Result = require('../models/Result');
 
+// @desc    Get all parents
+// @route   GET /api/parents
+// @access  Admin
+const getAllParents = async (req, res) => {
+    try {
+        const parents = await User.find({ role: 'Parent' }).select('-password');
+        res.json(parents);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 // @desc    Get parent's children
 // @route   GET /api/parents/children
 // @access  Parent
@@ -199,6 +211,7 @@ const getChildStats = async (req, res) => {
 };
 
 module.exports = {
+    getAllParents,
     getMyChildren,
     getChildGrades,
     getChildAttendance,

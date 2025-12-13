@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { protect } = require('../middleware/authMiddleware');
 const {
+    getAllParents,
     getMyChildren,
     getChildGrades,
     getChildAttendance,
@@ -12,6 +13,9 @@ const {
 
 // All routes require authentication
 router.use(protect);
+
+// Get all parents (Admin only)
+router.get('/', getAllParents);
 
 // Get my children
 router.get('/children', getMyChildren);
