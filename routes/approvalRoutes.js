@@ -7,7 +7,8 @@ const {
     approveUser,
     rejectUser,
     updateUserDetails,
-    getAllUsers
+    getAllUsers,
+    deleteUser
 } = require('../controllers/approvalController');
 
 // Get all pending registration requests
@@ -27,5 +28,8 @@ router.put('/:id/reject', protect, admin, rejectUser);
 
 // Update user details
 router.put('/:id/update', protect, admin, updateUserDetails);
+
+// Delete user
+router.delete('/users/:id', protect, admin, deleteUser);
 
 module.exports = router;

@@ -40,4 +40,26 @@ const createTeacher = async (req, res) => {
     }
 };
 
-module.exports = { getTeachers, createTeacher };
+// @desc    Delete a teacher
+// @route   DELETE /api/teachers/:id
+// @access  Admin
+const deleteTeacher = async (req, res) => {
+    try {
+        const teacher = await User.findById(req.params.id);
+
+        if (!teacher) {
+            return res.status(404).json({ message: 'Teacher not found' });
+        }
+
+        if (teacher.role !== 'Teacher') {
+            return res.status(400).json({ message: 'User is not a teacher' });
+        }
+
+        await User.findByIdAndDelete(req.params.id);
+        res.json({ message: 'Teacher deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+module.exports = { getTeachers, createTeacher, deleteTeacher };
