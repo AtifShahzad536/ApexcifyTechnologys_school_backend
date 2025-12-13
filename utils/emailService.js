@@ -241,7 +241,7 @@ const sendApprovalEmail = async (userEmail, userName, role) => {
                             <p>You can now login to the system using your credentials and start using all the features available to you.</p>
                             
                             <div style="text-align: center;">
-                                <a href="${'https://apexcify-technologys-school-fronten.vercel.app/login' || 'http://localhost:5173'}/login" class="button">
+                                <a href="${'https://apexcify-technologys-school-fronten.vercel.app' || 'http://localhost:5173'}/login" class="button">
                                     Login Now →
                                 </a>
                             </div>
