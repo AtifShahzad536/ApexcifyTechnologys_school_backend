@@ -148,9 +148,21 @@ const updateUserDetails = async (req, res) => {
         }
 
         // Update fields
-        if (role) user.role = role;
-        if (studentClass) user.studentClass = studentClass;
-        if (rollNumber) user.rollNumber = rollNumber;
+        if (role) {
+            user.role = role;
+            // Clear student fields if role is changed to non-Student
+            if (role !== 'Student') {
+                user.studentClass = undefined;
+                user.rollNumber = undefined;
+            }
+        }
+
+        // Update student fields if provided, or if specifically set to null (though above logic handles role change)
+        // If role is Student, allow updating these fields
+        if (role === 'Student' || user.role === 'Student') {
+            if (studentClass !== undefined) user.studentClass = studentClass;
+            if (rollNumber !== undefined) user.rollNumber = rollNumber;
+        }
 
         // Update children if parent
         if (role === 'Parent' && children) {

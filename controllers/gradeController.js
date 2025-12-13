@@ -48,6 +48,22 @@ const addGrade = async (req, res) => {
     }
 };
 
+// @desc    Get all grades (with optional filtering)
+// @route   GET /api/grades
+// @access  Teacher/Admin
+const getAllGrades = async (req, res) => {
+    try {
+        const grades = await Grade.find({})
+            .populate('student', 'name email rollNumber')
+            .populate('subject', 'name code')
+            .populate('teacher', 'name')
+            .sort({ date: -1 });
+        res.json(grades);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 // ... (getGrades functions remain same, omitted for brevity in this chunk if possible? No, I must replace contiguous block) ...
 
 // @desc    Get grades by student
@@ -200,6 +216,8 @@ const getStudentGradeStats = async (req, res) => {
 
 module.exports = {
     addGrade,
+    getAllGrades,
+    getGradesByStudent,
     getGradesByStudent,
     getGradesBySubject,
     updateGrade,
