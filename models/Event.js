@@ -22,6 +22,13 @@ const eventSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
+    },
+    isOnline: {
+        type: Boolean,
+        default: false
+    },
+    meetingLink: {
+        type: String
     }
 }, {
     timestamps: true

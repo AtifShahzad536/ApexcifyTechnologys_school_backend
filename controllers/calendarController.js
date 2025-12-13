@@ -64,12 +64,14 @@ const getTimetable = async (req, res) => {
 // @access  Admin
 const createEvent = async (req, res) => {
     try {
-        const { title, description, date, type } = req.body;
+        const { title, description, date, type, isOnline, meetingLink } = req.body;
         const event = await Event.create({
             title,
             description,
             date,
             type,
+            isOnline,
+            meetingLink,
             createdBy: req.user._id
         });
         res.status(201).json(event);

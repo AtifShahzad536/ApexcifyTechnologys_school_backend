@@ -30,6 +30,10 @@ const timetableSchema = new mongoose.Schema({
             endTime: {
                 type: String, // e.g. "09:45"
                 required: true
+            },
+            isOnline: {
+                type: Boolean,
+                default: false
             }
         }]
     }]
