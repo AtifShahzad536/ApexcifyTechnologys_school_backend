@@ -41,10 +41,10 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Rate limiting - 100 requests per 15 minutes per IP
+// Rate limiting - 1000 requests per 15 minutes per IP (increased for multiple students)
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // Limit each IP to 100 requests per windowMs
+    max: 1000, // Limit each IP to 1000 requests per windowMs (supports ~66 requests/minute)
     message: 'Too many requests from this IP, please try again later.',
     standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
