@@ -4,6 +4,7 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const path = require('path');
 const connectDB = require('./config/db');
 
 dotenv.config();
@@ -82,9 +83,9 @@ app.use('/api/leaves', require('./routes/leaveRoutes'));
 app.use('/api/exams', require('./routes/examRoutes'));
 app.use('/api/fees', require('./routes/feeRoutes'));
 
-// Routes Placeholder
+// Root Route - Beautiful Landing Page
 app.get('/', (req, res) => {
-    res.send('API is running...');
+    res.sendFile(path.join(__dirname, 'views', 'index.html'));
 });
 
 // Error Handling Middleware
