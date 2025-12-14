@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const { createClass, getClasses, deleteClass } = require('../controllers/classController');
-// const { protect, admin } = require('../middleware/authMiddleware'); // Add later when token is fixed
+const { protect, admin } = require('../middleware/authMiddleware');
 
 router.route('/')
-    .post(createClass)
-    .get(getClasses);
+    .post(protect, admin, createClass)
+    .get(protect, getClasses);
 
 router.route('/:id')
-    .delete(deleteClass);
+    .delete(protect, admin, deleteClass);
 
 module.exports = router;

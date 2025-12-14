@@ -75,5 +75,13 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password);
 };
 
+// Remove password and __v from JSON responses
+userSchema.methods.toJSON = function () {
+    const obj = this.toObject();
+    delete obj.password;
+    delete obj.__v;
+    return obj;
+};
+
 const User = mongoose.model('User', userSchema, 'schooluser');
 module.exports = User;

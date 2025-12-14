@@ -11,10 +11,10 @@ const {
 
 router.route('/')
     .post(protect, createAssignment)
-    .get(getAssignments);
+    .get(protect, getAssignments);
 
 router.route('/:id')
-    .get(getAssignmentById)
+    .get(protect, getAssignmentById)
     .put(protect, updateAssignment)
     .delete(protect, deleteAssignment);
 

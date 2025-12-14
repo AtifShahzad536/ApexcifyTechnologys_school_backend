@@ -7,14 +7,15 @@ const {
     updateSubject,
     deleteSubject
 } = require('../controllers/subjectController');
+const { protect, admin } = require('../middleware/authMiddleware');
 
 router.route('/')
-    .post(createSubject)
-    .get(getSubjects);
+    .post(protect, admin, createSubject)
+    .get(protect, getSubjects);
 
 router.route('/:id')
-    .get(getSubjectById)
-    .put(updateSubject)
-    .delete(deleteSubject);
+    .get(protect, getSubjectById)
+    .put(protect, admin, updateSubject)
+    .delete(protect, admin, deleteSubject);
 
 module.exports = router;

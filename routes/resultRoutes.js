@@ -7,11 +7,12 @@ const {
     getResultById,
     deleteResult
 } = require('../controllers/resultController');
+const { protect, admin } = require('../middleware/authMiddleware');
 
-router.post('/generate', generateResult);
-router.get('/student/:studentId', getResultByStudent);
-router.get('/class/:classId', getResultsByClass);
-router.get('/:id', getResultById);
-router.delete('/:id', deleteResult);
+router.post('/generate', protect, admin, generateResult);
+router.get('/student/:studentId', protect, getResultByStudent);
+router.get('/class/:classId', protect, getResultsByClass);
+router.get('/:id', protect, getResultById);
+router.delete('/:id', protect, admin, deleteResult);
 
 module.exports = router;

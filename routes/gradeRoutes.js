@@ -13,9 +13,9 @@ const {
 
 router.post('/', protect, addGrade);
 router.get('/', protect, getAllGrades);
-router.get('/student/:studentId', getGradesByStudent);
-router.get('/student/:studentId/stats', getStudentGradeStats);
-router.get('/subject/:subjectId', getGradesBySubject);
+router.get('/student/:studentId', protect, getGradesByStudent);
+router.get('/student/:studentId/stats', protect, getStudentGradeStats);
+router.get('/subject/:subjectId', protect, getGradesBySubject);
 router.put('/:id', protect, updateGrade);
 router.delete('/:id', protect, deleteGrade);
 
